@@ -45,7 +45,7 @@ class DateTimeFormatter
 
         foreach ($units as $attribute => $unit) {
             $count = $diff->$attribute;
-            if (0 !== $count) {
+            if (0 !== $count && $attribute != 's') {
                 $chunk[] = $this->doGetDiffMessage($count, $diff->invert, $unit, $alreadyInvert);
                 $alreadyInvert = true;
             }
