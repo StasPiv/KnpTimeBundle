@@ -41,11 +41,13 @@ class DateTimeFormatter
         $diff = $to->diff($from);
 
         $chunk = [];
+        $alreadyInvert = false;
 
         foreach ($units as $attribute => $unit) {
             $count = $diff->$attribute;
             if (0 !== $count) {
-                $chunk[] = $this->doGetDiffMessage($count, $diff->invert, $unit);
+                $chunk[] = $this->doGetDiffMessage($count, $diff->invert, $unit, $alreadyInvert);
+                $alreadyInvert = true;
             }
         }
         return implode(' ', $chunk);
