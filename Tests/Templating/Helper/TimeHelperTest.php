@@ -4,6 +4,9 @@ namespace Knp\Bundle\TimeBundle\Templating\Helper;
 
 class TimeHelperTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var TimeHelper
+     */
     protected $helper;
 
     public function setUp()

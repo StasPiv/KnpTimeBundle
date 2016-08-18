@@ -2,13 +2,19 @@
 
 namespace Knp\Bundle\TimeBundle;
 
+use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\Translator;
+
 class DateTimeFormatterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var DateTimeFormatter
+     */
     protected $formatter;
 
     public function setUp()
     {
-        $translator = $this->getMock('Symfony\Component\Translation\Translator', array(), array(), '', false);
+        $translator = $this->createMock(Translator::class);
         $translator->expects($this->any())
             ->method('trans')
             ->will($this->returnArgument(0));
@@ -55,15 +61,24 @@ class DateTimeFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDiffMessageThrowsAnExceptionIfTheDiffIsEmpty()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $this->formatter->getDiffMessage(0, true, 'day');
     }
 
     public function testGetDiffMessageThrowsAnExceptionIfTheDiffUnitIsNotSupported()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
 
         $this->formatter->getDiffMessage(1, true, 'patate');
+    }
+
+    public function testGetMessageWithMinutes()
+    {
+        $from = new \Datetime();
+        $to = new \Datetime('+90minute');
+        $message = $this->formatter->formatDiff($from, $to);
+
+        echo $message;
     }
 }

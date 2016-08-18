@@ -3,7 +3,7 @@
 namespace Knp\Bundle\TimeBundle;
 
 use Symfony\Component\Translation\TranslatorInterface;
-use Datetime;
+use DateTime;
 
 class DateTimeFormatter
 {
@@ -22,12 +22,12 @@ class DateTimeFormatter
     /**
      * Returns a formatted diff for the given from and to datetimes
      *
-     * @param  Datetime $from
-     * @param  Datetime $to
+     * @param  DateTime $from
+     * @param  DateTime $to
      *
      * @return string
      */
-    public function formatDiff(Datetime $from, Datetime $to)
+    public function formatDiff(DateTime $from, DateTime $to)
     {
         static $units = array(
             'y' => 'year',
@@ -40,14 +40,15 @@ class DateTimeFormatter
 
         $diff = $to->diff($from);
 
+        $chunk = [];
+
         foreach ($units as $attribute => $unit) {
             $count = $diff->$attribute;
             if (0 !== $count) {
-                return $this->doGetDiffMessage($count, $diff->invert, $unit);
+                $chunk[] = $this->doGetDiffMessage($count, $diff->invert, $unit);
             }
         }
-
-        return $this->getEmptyDiffMessage();
+        return implode(' ', $chunk);
     }
 
     /**
@@ -75,9 +76,9 @@ class DateTimeFormatter
         return $this->doGetDiffMessage($count, $invert, $unit);
     }
 
-    protected function doGetDiffMessage($count, $invert, $unit)
+    protected function doGetDiffMessage($count, $invert, $unit, $withoutInvert = false)
     {
-        $id = sprintf('diff.%s.%s', $invert ? 'ago' : 'in', $unit);
+        $id = $withoutInvert ? sprintf('diff.%s.%s', 'and', $unit) : sprintf('diff.%s.%s', $invert ? 'ago' : 'in', $unit);
 
         return $this->translator->transChoice($id, $count, array('%count%' => $count), 'time');
     }
